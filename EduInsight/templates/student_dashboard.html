@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Dashboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f5f9ff;
+      margin: 0;
+      padding: 2rem;
+      color: #472d89;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #e0e7ff;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(71, 45, 137, 0.3);
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 2.5rem;
+      color: #472d89;
+      flex: 1 1 auto;
+      min-width: 200px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .button-group a {
+      background-color: #472d89;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 4px 6px rgba(71, 45, 137, 0.5);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .button-group a:hover {
+      background-color: #351f70;
+      color: #e0e7ff;
+    }
+
+    section {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 14px rgba(71, 45, 137, 0.3);
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #472d89;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    li {
+      background: #dbeafe;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1e3a8a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+      text-align: center;
+    }
+
+    li:hover {
+      background: #bfdbfe;
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.7);
+      transform: scale(1.05);
+      color: #1e3a8a;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #6b7280;
+      margin-top: 20px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .button-group {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .button-group a {
+        flex: 1;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Hello, {{ username }}!</h1>
+      <div class="button-group">
+        <a href="/logout">Logout</a>
+        <a href="/student/results">My Quiz Results</a>
+      </div>
+    </header>
+
+    <section>
+      <h2>Available Quizzes</h2>
+      {% if quizzes %}
+        <ul>
+          {% for quiz in quizzes %}
+            {% if quiz.id not in completed_quiz_ids %}
+              <li onclick="window.location.href='/quiz/{{ quiz.id }}'">{{ quiz.name }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No quizzes available right now. Please check back soon!</p>
+      {% endif %}
+    </section>
+  </div>
+</body>
+</html>

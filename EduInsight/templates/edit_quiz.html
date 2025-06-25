@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit Quiz - {{ quiz.name }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f9ff; 
+            margin: 0;
+            padding: 2rem;
+            color: #472d89; 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #ffffff; 
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 14px rgba(71, 45, 137, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+            color: #472d89; 
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 0.5rem 0;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            border: 2px solid rgba(71, 45, 137, 0.3); 
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #472d89; 
+        }
+
+        button {
+            background-color: #472d89; 
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #351f70; 
+        }
+
+        .question {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 2px solid rgba(71, 45, 137, 0.3); 
+            border-radius: 8px;
+            background: #ffffff; 
+            box-shadow: 0 4px 8px #351f70;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #472d89; 
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+            color: #351f70; 
+        }
+    </style>
+    <script>
+        function addQuestion() {
+            const container = document.getElementById('questions-container');
+            const questionCount = container.children.length + 1;
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.innerHTML = `
+                <h3>Question ${questionCount}</h3>
+                <label for="question_${questionCount}">Question Text</label>
+                <input type="text" name="question_${questionCount}" required>
+
+                <label for="choice_${questionCount}_1">Choice 1</label>
+                <input type="text" name="choice_${questionCount}_1" required>
+                <label for="choice_${questionCount}_2">Choice 2</label>
+                <input type="text" name="choice_${questionCount}_2" required>
+                <label for="choice_${questionCount}_3">Choice 3</label>
+                <input type="text" name="choice_${questionCount}_3">
+                <label for="choice_${questionCount}_4">Choice 4</label>
+                <input type="text" name="choice_${questionCount}_4">
+
+                <label for="correct_answer_${questionCount}">Correct Answer</label>
+                <input type="text" name="correct_answer_${questionCount}" required>
+            `;
+            container.appendChild(questionDiv);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Quiz: {{ quiz.name }}</h1>
+        <form method="POST" action="{{ url_for('edit_quiz', quiz_id=quiz.id) }}">
+            <label for="quiz_name">Quiz Name</label>
+            <input type="text" id="quiz_name" name="quiz_name" value="{{ quiz.name }}" required>
+
+            <input type="hidden" id="num_questions" name="num_questions" value="{{ num_questions }}">
+
+            <div id="questions-container">
+                {% for i in range(num_questions) %}
+                    {% set q = questions[i] %}
+                    <div class="question">
+                        <h3>Question {{ i + 1 }}</h3>
+                        <label for="question_{{ i + 1 }}">Question Text</label>
+                        <input type="text" name="question_{{ i + 1 }}" value="{{ q.text }}" required>
+
+                        <label for="choice_{{ i + 1 }}_1">Choice 1</label>
+                        <input type="text" name="choice_{{ i + 1 }}_1" value="{{ q.choice_1 }}" required>
+                        <label for="choice_{{ i + 1 }}_2">Choice 2</label>
+                        <input type="text" name="choice_{{ i + 1 }}_2" value="{{ q.choice_2 }}" required>
+                        <label for="choice_{{ i + 1 }}_3">Choice 3</label>
+                        <input type="text" name="choice_{{ i + 1 }}_3" value="{{ q.choice_3 }}">
+                        <label for="choice_{{ i + 1 }}_4">Choice 4</label>
+                        <input type="text" name="choice_{{ i + 1 }}_4" value="{{ q.choice_4 }}">
+
+                        <label for="correct_answer_{{ i + 1 }}">Correct Answer</label>
+                        <input type="text" name="correct_answer_{{ i + 1 }}" value="{{ q.correct_answer }}" required>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" onclick="addQuestion()">Add Another Question</button>
+            <button type="submit">Save Changes</button>
+        </form>
+        <a href="{{ url_for('teacher_dashboard') }}" class="back-link">Back to Dashboard</a>
+    </div>
+</body>
+</html>

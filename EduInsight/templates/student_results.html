@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Quiz Results</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f9ff; 
+            margin: 0;
+            padding: 2rem;
+            color: #472d89;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #ffffff; 
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 14px rgba(71, 45, 137, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: #472d89;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        th, td {
+            border: 1px solid #d1d5db; 
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #472d89; 
+            color: white;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f3f4f6; 
+        }
+
+        a.back {
+            display: inline-block;
+            margin-top: 1rem;
+            text-decoration: none;
+            color: #472d89; 
+            font-weight: bold;
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        a.back:hover {
+            text-decoration: underline;
+            color: #351f70; 
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #6b7280; 
+            margin-top: 20px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Quiz Results</h1>
+        {% if results %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Quiz</th>
+                        <th>Score</th>
+                        <th>Total Questions</th>
+                        <th>Date Taken</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                        <tr>
+                            <td>{{ result.quiz_name }}</td> 
+                            <td>{{ result.score }}</td>
+                            <td>{{ result.total_questions }}</td>
+                            <td>{{ result.timestamp.strftime("%Y-%m-%d %H:%M") }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You have no quiz results yet.</p>
+        {% endif %}
+        <a href="{{ url_for('student_dashboard') }}" class="back">← Back to Dashboard</a>
+    </div>
+</body>
+</html>

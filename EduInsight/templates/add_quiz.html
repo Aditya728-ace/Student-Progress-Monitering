@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add New Quiz</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa; 
+            margin: 0;
+            padding: 2rem;
+            color: #3c2f41;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            max-width: 900px;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 16px 48px rgba(60, 47, 65, 0.12);
+            padding: 2.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+            color: #6f42c1;
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 0.5rem 0;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #6f42c1;
+            box-shadow: 0 0 5px rgba(111, 66, 193, 0.5);
+        }
+
+        button {
+            background-color: #6f42c1; 
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #5935a2; 
+            transform: translateY(-2px);
+        }
+
+        .question {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f9f9f9; 
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-question-btn {
+            background-color: #f48fb1; 
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .add-question-btn:hover {
+            background-color: #880e4f; 
+        }
+    </style>
+    <script>
+        function addQuestion() {
+            const container = document.getElementById('questions-container');
+            const questionCount = container.children.length + 1; 
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.innerHTML = `
+                <h3>Question ${questionCount}</h3>
+                <label for="question_${questionCount}">Question Text</label>
+                <input type="text" name="question_${questionCount}" required />
+
+                <label for="choice_${questionCount}_1">Choice 1</label>
+                <input type="text" name="choice_${questionCount}_1" required />
+                <label for="choice_${questionCount}_2">Choice 2</label>
+                <input type="text" name="choice_${questionCount}_2" required />
+                <label for="choice_${questionCount}_3">Choice 3</label>
+                <input type="text" name="choice_${questionCount}_3" required />
+                <label for="choice_${questionCount}_4">Choice 4</label>
+                <input type="text" name="choice_${questionCount}_4" required />
+
+                <label for="correct_answer_${questionCount}">Correct Answer</label>
+                <input type="text" name="correct_answer_${questionCount}" required />
+            `;
+            container.appendChild(questionDiv);
+        }
+    </script>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Add New Quiz</h1>
+        <form method="POST" action="{{ url_for('add_quiz') }}">
+            <label for="quiz_name">Quiz Name</label>
+            <input type="text" name="quiz_name" id="quiz_name" required />
+
+            <label for="num_questions">Number of Questions</label>
+            <input type="number" name="num_questions" id="num_questions" value="1" min="1" required />
+
+            <div id="questions-container">
+                <div class="question">
+                    <h3>Question 1</h3>
+                    <label for="question_1">Question Text</label>
+                    <input type="text" name="question_1" required />
+
+                    <label for="choice_1_1">Choice 1</label>
+                    <input type="text" name="choice_1_1" required />
+                    <label for="choice_1_2">Choice 2</label>
+                    <input type="text" name="choice_1_2" required />
+                    <label for="choice_1_3">Choice 3</label>
+                    <input type="text" name="choice_1_3" required />
+                    <label for="choice_1_4">Choice 4</label>
+                    <input type="text" name="choice_1_4" required />
+
+                    <label for="correct_answer_1">Correct Answer</label>
+                    <input type="text" name="correct_answer_1" required />
+                </div>
+            </div>
+
+            <button type="button" class="add-question-btn" onclick="addQuestion()">Add Another Question</button>
+            <button type="submit">Add Quiz</button>
+        </form>
+    </div>
+</body>
+</html>

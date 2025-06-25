@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login | Student Monitoring System</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4f8;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2d3748;
+      animation: fadeIn 0.8s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .login-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 20px;
+      width: 400px;
+      box-shadow: 0 20px 30px rgba(0,0,0,0.12);
+      position: relative;
+      text-align: center;
+      animation: bounceIn 0.6s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      60% {
+        opacity: 1;
+        transform: translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      margin-bottom: 30px;
+      font-weight: 800;
+      font-size: 2rem;
+      color: #3b82f6;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #4a5568;
+      text-align: left;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      border-radius: 12px;
+      border: 1.5px solid #cbd5e1;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    select:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 5px rgba(59,130,246,0.5);
+    }
+
+    select {
+      background-color: #f9fafb;
+      color: #2d3748;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px 0;
+      background-color: #3b82f6;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2563eb;
+      transform: scale(1.05);
+    }
+
+    .flash {
+      background-color: #fed7d7;
+      color: #9b2c2c;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    p {
+      text-align: center;
+      color: #718096;
+      font-size: 0.95rem;
+    }
+
+    a {
+      color: #3b82f6;
+      font-weight: 600;
+      text-decoration: underline;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #2563eb;
+    }
+
+    /* Cartoon styling */
+    .cartoon-container {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 30px auto;
+      position: relative;
+    }
+
+    /* Eyes */
+    .eye {
+      fill: #374151;
+      transition: transform 0.3s ease;
+      transform-origin: center;
+    }
+
+    /* Hands */
+    .hand {
+      fill: #a78bfa;
+      transition: transform 0.3s ease;
+      transform-origin: center;
+      cursor: default;
+    }
+
+    input[type="password"]:focus ~ .cartoon-container .eye {
+      transform: scaleY(0);
+    }
+
+    input[type="password"]:focus ~ .cartoon-container .left-hand {
+      transform: translate(-20px, -20px) rotate(30deg);
+    }
+
+    input[type="password"]:focus ~ .cartoon-container .right-hand {
+      transform: translate(20px, -20px) rotate(-30deg);
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="login-container">
+      <h2>Login</h2>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('login') }}">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" required autocomplete="username" />
+
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required autocomplete="current-password" />
+
+        <div class="cartoon-container" aria-hidden="true">
+          <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Login cartoon eye animation">
+            <!-- Face circle -->
+            <circle cx="60" cy="60" r="50" fill="#a78bfa"/>
+            <!-- Left Eye -->
+            <circle class="eye" cx="40" cy="55" r="10"/>
+            <!-- Right Eye -->
+            <circle class="eye" cx="80" cy="55" r="10"/>
+            <!-- Left Hand -->
+            <path class="hand left-hand" d="M35 65 C20 55 20 85 40 80" />
+            <!-- Right Hand -->
+            <path class="hand right-hand" d="M85 65 C100 55 100 85 80 80" />
+          </svg>
+        </div>
+
+        <label for="role">Select Role</label>
+        <select name="role" id="role" required>
+          <option value="" disabled selected>Select your role</option>
+          <option value="teacher">Teacher</option>
+          <option value="student">Student</option>
+        </select>
+
+        <button type="submit">Login</button>
+        <p>Don't have an account? <a href="{{ url_for('signup') }}">Signup here</a></p>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

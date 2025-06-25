@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>All Students Quiz Results</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f9ff;
+            margin: 0;
+            padding: 2rem;
+            color: #472d89;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .results-container {
+            background: #fff;
+            max-width: 900px;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 16px 48px rgba(71, 45, 137, 0.12);
+            padding: 2.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #472d89;
+            font-weight: 700;
+            font-size: 2.5rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-group {
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #5a448a;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #9a87c9;
+            transition: border-color 0.3s ease;
+        }
+        select:focus {
+            border-color: #472d89;
+            box-shadow: 0 0 6px rgba(71, 45, 137, 0.5);
+            outline: none;
+        }
+
+        .tables-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 4px 8px rgba(71,45,137,0.1);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: #472d89;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee8ff;
+            text-align: left;
+            word-break: break-word;
+        }
+
+        th {
+            background-color: #472d89;
+            color: white;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #e9e5ff;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #472d89;
+            text-decoration: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+            color: #351f70;
+        }
+
+        .delete-button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background-color: #c9302c;
+        }
+
+        .download-button {
+            background-color: #4caf50; 
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-left: 10px; 
+        }
+
+        .download-button:hover {
+            background-color: #45a049;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+            .results-container {
+                padding: 1.5rem 1.75rem;
+            }
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-group {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="results-container">
+        <h1>All Students Quiz Results</h1>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="studentFilter">Filter by Student:</label>
+                <select id="studentFilter" aria-label="Filter quiz results by student">
+                    <option value="all">All Students</option>
+                    {% set student_ids = [] %}
+                    {% for res in results %}
+                        {% if res.student.id not in student_ids %}
+                            {% set _ = student_ids.append(res.student.id) %}
+                            <option value="{{ res.student.id }}">{{ res.student.username }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="quizFilter">Filter by Quiz:</label>
+                <select id="quizFilter" aria-label="Filter quiz results by quiz">
+                    <option value="all">All Quizzes</option>
+                    {% set quiz_ids = [] %}
+                    {% for res in results %}
+                        {% if res.quiz_id not in quiz_ids %}
+                            {% set _ = quiz_ids.append(res.quiz_id) %}
+                            <option value="{{ res.quiz_id }}">{{ res.quiz_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <form id="downloadQuizResultsForm" method="get" style="display:none;">
+                <button type="submit" class="download-button" aria-label="Download filtered quiz results CSV">Download Quiz Results CSV</button>
+            </form>
+        </div>
+
+        <div class="tables-container">
+            <table id="combinedQuizResultsTable" style="display:none;" aria-label="Combined student results for selected quiz">
+                <thead>
+                    <tr>
+                        <th>Student Username</th>
+                        <th>Score</th>
+                        <th>Total Questions</th>
+                        <th>Date Taken</th>
+                    </tr>
+                </thead>
+                <tbody id="combinedQuizResultsBody">
+                </tbody>
+            </table>
+
+            {% set displayed_student_ids = [] %}
+            {% for student_res in results %}
+                {% if student_res.student.id not in displayed_student_ids %}
+                    {% set _ = displayed_student_ids.append(student_res.student.id) %}
+                    <table id="table-student-{{ student_res.student.id }}" class="student-table" role="table" aria-label="Results for {{ student_res.student.username }}">
+                        <thead>
+                            <tr>
+                                <th colspan="6" style="font-size: 1.25rem;">
+                                    {{ student_res.student.username }}
+                                    <form method="post" action="{{ url_for('delete_student', student_id=student_res.student.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this student and all their results?');">
+                                        <button type="submit" class="delete-button" aria-label="Delete all results for {{ student_res.student.username }}">Delete Student</button>
+                                    </form>
+                                    <form method="get" action="{{ url_for('download_student_results', student_id=student_res.student.id) }}" style="display:inline;">
+                                        <button type="submit" class="download-button" aria-label="Download results for {{ student_res.student.username }}">Download CSV</button>
+                                    </form>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Quiz Name</th>
+                                <th>Score</th>
+                                <th>Total Questions</th>
+                                <th>Date Taken</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results if result.student.id == student_res.student.id %}
+                                <tr data-quiz-id="{{ result.quiz_id }}">
+                                    <td>{{ result.quiz_name }}</td>
+                                    <td>{{ result.score }}</td>
+                                    <td>{{ result.total_questions }}</td>
+                                    <td>{{ result.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            {% endfor %}
+
+            {% if results|length == 0 %}
+                <p>No quiz results found.</p>
+            {% endif %}
+        </div>
+
+        <a href="{{ url_for('teacher_dashboard') }}" class="back-link">← Back to Dashboard</a>
+
+    </div>
+
+    <script>
+        const studentFilter = document.getElementById('studentFilter');
+        const quizFilter = document.getElementById('quizFilter');
+        const tables = document.querySelectorAll('.student-table');
+        const combinedTable = document.getElementById('combinedQuizResultsTable');
+        const combinedBody = document.getElementById('combinedQuizResultsBody');
+        const downloadQuizForm = document.getElementById('downloadQuizResultsForm');
+
+        function filterTables() {
+            const selectedStudent = studentFilter.value;
+            const selectedQuiz = quizFilter.value;
+
+            if (selectedQuiz !== 'all') {
+                downloadQuizForm.style.display = 'inline-block';
+                downloadQuizForm.action = `/teacher/download_quiz_results/${selectedQuiz}`;
+            } else {
+                downloadQuizForm.style.display = 'none';
+                downloadQuizForm.action = '#';
+            }
+
+            if (selectedStudent === 'all' && selectedQuiz !== 'all') {
+                combinedBody.innerHTML = ''; 
+
+                tables.forEach(table => {
+                    const rows = table.querySelectorAll(`tbody tr[data-quiz-id="${selectedQuiz}"]`);
+                    rows.forEach(row => {
+                        const newRow = document.createElement('tr');
+
+                        const studentUsername = table.getAttribute('aria-label').replace('Results for ', '');
+
+                        const quizName = row.children[0].textContent;
+                        const score = row.children[1].textContent;
+                        const totalQuestions = row.children[2].textContent;
+                        const dateTaken = row.children[3].textContent;
+
+                        newRow.innerHTML = `
+                            <td>${studentUsername}</td>
+                            <td>${score}</td>
+                            <td>${totalQuestions}</td>
+                            <td>${dateTaken}</td>
+                        `;
+                        combinedBody.appendChild(newRow);
+                    });
+                    table.style.display = 'none';
+                });
+
+                if (combinedBody.children.length > 0) {
+                    combinedTable.style.display = '';
+                } else {
+                    combinedTable.style.display = 'none';
+                }
+            } else {
+
+                combinedTable.style.display = 'none'; 
+
+                tables.forEach(table => {
+                    const tableStudentId = table.id.replace('table-student-', '');
+                    let showTable = false;
+
+                    if (selectedStudent === 'all' || selectedStudent === tableStudentId) {
+                        const rows = table.querySelectorAll('tbody tr');
+                        let hasVisibleRow = false;
+                        rows.forEach(row => {
+                            const rowQuizId = row.getAttribute('data-quiz-id');
+                            if (selectedQuiz === 'all' || selectedQuiz === rowQuizId) {
+                                row.style.display = '';
+                                hasVisibleRow = true;
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        });
+
+                        if (hasVisibleRow) {
+                            showTable = true;
+                        }
+                    }
+                    table.style.display = showTable ? '' : 'none';
+                });
+            }
+        }
+
+        studentFilter.addEventListener('change', filterTables);
+        quizFilter.addEventListener('change', filterTables);
+
+        filterTables();
+    </script>
+</body>
+</html>

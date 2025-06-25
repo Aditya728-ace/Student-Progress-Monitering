@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ quiz.name }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f9ff;
+            margin: 0;
+            padding: 2rem;
+            color: #472d89;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 14px rgba(71, 45, 137, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: #472d89;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .question {
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            border: 2px solid rgba(71, 45, 137, 0.3);
+            box-shadow: 0 4px 8px #472d89;
+            transition: border-color 0.3s ease;
+        }
+
+        .question:hover {
+            border-color: rgba(71, 45, 137, 0.6);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #472d89;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+            align-self: flex-end;
+        }
+
+        button:hover {
+            background-color: #351f70;
+        }
+
+        a.back {
+            display: inline-block;
+            margin-top: 1rem;
+            text-decoration: none;
+            color: #472d89;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        a.back:hover {
+            text-decoration: underline;
+            color: #351f70;
+        }
+
+        .alert {
+            background-color: #d4edda;
+            color: #155724; 
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ quiz.name }}</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="post" id="quizForm">
+            {% for question in quiz.questions %}
+                <div class="question">
+                    <h2>{{ question.text }}</h2>
+                    <label><input type="radio" name="q{{ question.id }}" value="{{ question.choice_1 }}" required /> {{ question.choice_1 }}</label>
+                    <label><input type="radio" name="q{{ question.id }}" value="{{ question.choice_2 }}" /> {{ question.choice_2 }}</label>
+                    <label><input type="radio" name="q{{ question.id }}" value="{{ question.choice_3 }}" /> {{ question.choice_3 }}</label>
+                    <label><input type="radio" name="q{{ question.id }}" value="{{ question.choice_4 }}" /> {{ question.choice_4 }}</label>
+                </div>
+            {% endfor %}
+            <button type="submit">Submit Quiz</button>
+        </form>
+        <a href="{{ url_for('student_dashboard') }}" class="back">← Back to Dashboard</a>
+    </div>
+</body>
+</html>
