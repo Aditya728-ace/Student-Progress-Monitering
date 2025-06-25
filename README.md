@@ -42,4 +42,4 @@ This project is a comprehensive web application designed to facilitate quiz mana
 *   **Data Export:** CSV generation 📄
 
 ### 🧑‍💻 Made By
-* This project was developed by Aditya Jayant Ahirrao
+* This project is developed by Aditya Jayant Ahirrao.
