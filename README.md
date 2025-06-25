@@ -40,6 +40,7 @@ This project is a comprehensive web application designed to facilitate quiz mana
 *   **Frontend:** HTML, CSS (Jinja2 templating) 🎨
 *   **Authentication:** Session-based management 🛡️
 *   **Data Export:** CSV generation 📄
+*   **Visualization:** Power BI (external tool, data provided via CSV exports) 📊
 
 ### 🧑‍💻 Made By
 * This project is developed by Aditya Jayant Ahirrao.
